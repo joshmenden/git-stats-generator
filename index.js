@@ -1,0 +1,35 @@
+const shell = require('shelljs')
+const prsMerged = require('./prsMerged.js')
+const totalCommits = require('./totalCommits.js')
+const prApprovals = require('./prApprovals.js')
+
+if (!process.argv.includes('--path') || !process.argv.includes('--author') || !process.argv.includes('--since')) {
+  console.log('Missing one of the following required arguments: --path, --author, --since')
+  return
+}
+
+// This is an optional argument. It should be the email
+// of the developer that matches the email address with
+// which they approve pull requests
+let authorEmailIndex = undefined
+if (process.argv.includes('--author-email')) {
+  authorEmailIndex = process.argv.indexOf('--author-email') + 1
+}
+
+let pathIndex = process.argv.indexOf('--path') + 1
+let authorIndex = process.argv.indexOf('--author') + 1
+let sinceIndex = process.argv.indexOf('--since') + 1
+const path = process.argv[pathIndex]
+const author = process.argv[authorIndex]
+const since = process.argv[sinceIndex]
+let authorEmail = undefined
+if (authorEmailIndex) {
+  authorEmail = process.argv[authorEmailIndex]
+}
+
+shell.cd(path)
+shell.exec('git checkout master', { silent: true })
+
+numPrsMerged = prsMerged({ since: since, author: author })
+numPrApprovals = prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author })
+numTotalCommits = totalCommits({ author: author, since: since})

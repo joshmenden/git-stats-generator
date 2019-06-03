@@ -1,0 +1,15 @@
+{
+  "name": "git-stats",
+  "version": "1.0.0",
+  "description": "A script to help you get some simple stats from a repo",
+  "main": "index.js",
+  "dependencies": {
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Josh Menden",
+  "license": "ISC"
+}
