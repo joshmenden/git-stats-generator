@@ -2,6 +2,7 @@ const shell = require('shelljs')
 const prsMerged = require('./prsMerged.js')
 const totalCommits = require('./totalCommits.js')
 const prApprovals = require('./prApprovals.js')
+const lineChanges = require('./lineChanges.js')
 
 if (!process.argv.includes('--path') || !process.argv.includes('--author') || !process.argv.includes('--since')) {
   console.log('Missing one of the following required arguments: --path, --author, --since')
@@ -30,18 +31,20 @@ if (authorEmailIndex) {
 shell.cd(path)
 shell.exec('git checkout master', { silent: true })
 
-// numPrsMerged = prsMerged({ since: since, author: author })
-// numPrApprovals = prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author })
-// numTotalCommits = totalCommits({ author: author, since: since})
-
-prs = new GitStat("Total PRs Merged", prsMerged({ since: since, author: author }))
-approvals = new GitStat("Total PR Approvals", prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author }))
-commits = new GitStat("Total Commits", totalCommits({ author: author, since: since}))
-
-
 function GitStat (statName, result) {
   this.statName = statName
   this.result = result
 }
 
-console.table([prs, approvals, commits])
+prs = new GitStat("Total PRs Merged", prsMerged({ since: since, author: author }))
+approvals = new GitStat("Total PR Approvals", prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author }))
+commits = new GitStat("Total Commits", totalCommits({ author: author, since: since}))
+
+let lineStatObject = lineChanges({ author: author, since: since })
+let lineStats = []
+
+Object.keys(lineStatObject).forEach(key => {
+  lineStats.push(new GitStat(key, lineStatObject[key]))
+})
+
+console.table([prs, approvals, commits, ...lineStats])
