@@ -30,6 +30,18 @@ if (authorEmailIndex) {
 shell.cd(path)
 shell.exec('git checkout master', { silent: true })
 
-numPrsMerged = prsMerged({ since: since, author: author })
-numPrApprovals = prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author })
-numTotalCommits = totalCommits({ author: author, since: since})
+// numPrsMerged = prsMerged({ since: since, author: author })
+// numPrApprovals = prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author })
+// numTotalCommits = totalCommits({ author: author, since: since})
+
+prs = new GitStat("Total PRs Merged", prsMerged({ since: since, author: author }))
+approvals = new GitStat("Total PR Approvals", prApprovals({ since: since, authorEmail: authorEmail ? authorEmail : author }))
+commits = new GitStat("Total Commits", totalCommits({ author: author, since: since}))
+
+
+function GitStat (statName, result) {
+  this.statName = statName
+  this.result = result
+}
+
+console.table([prs, approvals, commits])
