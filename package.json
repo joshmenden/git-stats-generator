@@ -4,7 +4,7 @@
   "description": "A script to help you get some simple stats from a repo",
   "main": "index.js",
   "dependencies": {
-    "shelljs": "^0.8.3"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {},
   "scripts": {
